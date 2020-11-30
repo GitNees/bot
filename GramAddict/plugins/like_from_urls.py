@@ -57,12 +57,16 @@ class LikeFromURLs(Plugin):
             device_id=self.device_id,
             sessions=self.sessions,
             session_state=self.session_state,
+            args=args,
         )
         def job():
             for url in self.urls:
                 url = url.strip().replace("\n", "")
                 if validate_url(url) and "instagram.com/p/" in url:
-                    if open_instagram_with_url(self.device_id, url) is True:
+                    if (
+                        open_instagram_with_url(self.device_id, args.app_id, url)
+                        is True
+                    ):
                         opened_post_view = OpenedPostView(device)
                         like_succeed = do_like(opened_post_view, device, on_like)
                         logger.info(

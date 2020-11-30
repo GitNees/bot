@@ -21,7 +21,7 @@ from GramAddict.core.views import LanguageNotEnglishException, TabBarView
 logger = logging.getLogger(__name__)
 
 
-def run_safely(device, device_id, sessions, session_state):
+def run_safely(device, device_id, sessions, session_state, args):
     def actual_decorator(func):
         def wrapper(*args, **kwargs):
             session_state = sessions[-1]
@@ -49,7 +49,7 @@ def run_safely(device, device_id, sessions, session_state):
                 # Hack for the case when IGTV was accidentally opened
                 close_instagram(device_id)
                 random_sleep()
-                open_instagram(device_id)
+                open_instagram(device_id, args.app_id)
                 TabBarView(device).navigateToProfile()
             except LanguageNotEnglishException:
                 logger.info(
@@ -59,7 +59,7 @@ def run_safely(device, device_id, sessions, session_state):
             except Exception as e:
                 logger.error(traceback.format_exc())
                 save_crash(device)
-                close_instagram(device_id)
+                close_instagram(device_id, args.app_id)
                 print_full_report(sessions)
                 sessions.persist(directory=session_state.my_username)
                 raise e

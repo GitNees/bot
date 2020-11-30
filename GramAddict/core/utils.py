@@ -71,12 +71,12 @@ def get_instagram_version(device_id):
     return version
 
 
-def open_instagram_with_url(device_id, url):
-    logger.info("Open Instagram app with url: {}".format(url))
+def open_instagram_with_url(device_id, app_id, url):
+    logger.info(f"Open Instagram app with url: {url}")
     cmd = (
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + " shell am start -a android.intent.action.VIEW -d {}".format(url)
+        + f" shell am start -a android.intent.action.VIEW -d {url} {app_id}"
     )
     cmd_res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
     err = cmd_res.stderr.strip()
@@ -87,12 +87,12 @@ def open_instagram_with_url(device_id, url):
     return True
 
 
-def open_instagram(device_id):
+def open_instagram(device_id, app_id):
     logger.info("Open Instagram app")
     cmd = (
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + " shell am start -n com.instagram.android/com.instagram.mainactivity.MainActivity"
+        + f" shell am start -n {app_id}/com.instagram.mainactivity.MainActivity"
     )
     cmd_res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
     err = cmd_res.stderr.strip()
@@ -101,12 +101,12 @@ def open_instagram(device_id):
     random_sleep()
 
 
-def close_instagram(device_id):
+def close_instagram(device_id, app_id):
     logger.info("Close Instagram app")
     os.popen(
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + " shell am force-stop com.instagram.android"
+        + f" shell am force-stop {app_id}"
     ).close()
 
 
