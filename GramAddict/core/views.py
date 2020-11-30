@@ -926,6 +926,9 @@ class ProfileView(ActionBarView):
 
         return self.device.find(classNameMatches=CLASSNAME)
 
+    def _getFistPostView(self, recycler):
+        return recycler.child(className="android.widget.ImageView")
+
 
 class CurrentStoryView:
     def __init__(self, device: DeviceFacade):
