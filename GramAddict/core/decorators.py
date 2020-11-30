@@ -28,7 +28,7 @@ def run_safely(device, device_id, sessions, session_state, args):
             try:
                 func(*args, **kwargs)
             except KeyboardInterrupt:
-                close_instagram(device_id)
+                close_instagram(device_id, args.app_id)
                 logger.info(
                     f"-------- FINISH: {datetime.now().time()} --------",
                     extra={"color": f"{Style.BRIGHT}{Fore.YELLOW}"},
@@ -47,7 +47,7 @@ def run_safely(device, device_id, sessions, session_state, args):
                 save_crash(device)
                 logger.info("No idea what it was. Let's try again.")
                 # Hack for the case when IGTV was accidentally opened
-                close_instagram(device_id)
+                close_instagram(device_id, args.app_id)
                 random_sleep()
                 open_instagram(device_id, args.app_id)
                 TabBarView(device).navigateToProfile()
