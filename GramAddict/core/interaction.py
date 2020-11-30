@@ -221,11 +221,14 @@ def _follow(device, username, follow_percentage, args, session_state):
             return False
 
         logger.info("Following...")
+        """
         coordinator_layout = device.find(
             resourceId=f"{args.app_id}:id/coordinator_root_layout"
         )
         if coordinator_layout.exists():
             coordinator_layout.scroll(DeviceFacade.Direction.TOP)
+        """
+        device.swipe(DeviceFacade.Direction.BOTTOM)
 
         random_sleep()
 

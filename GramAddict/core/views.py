@@ -518,7 +518,7 @@ class OpenedPostView:
                 self.device.swipe(DeviceFacade.Direction.TOP, scale=0.1)
                 like_btn_view = post_media_view.down(
                     resourceIdMatches=case_insensitive_re(
-                        f"{device.app_id}:id/row_feed_button_like"
+                        f"{self.device.app_id}:id/row_feed_button_like"
                     )
                 )
 
