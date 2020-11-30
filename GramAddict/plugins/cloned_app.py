@@ -15,7 +15,7 @@ class ClonedApp(Plugin):
                 "nargs": 1,
                 "help": "provide app-id if using a custom/cloned app",
                 "metavar": "com.instagram.android",
-                "default": "com.instagram.android",
+                "default": ["com.instagram.android"],
             },
         ]
 

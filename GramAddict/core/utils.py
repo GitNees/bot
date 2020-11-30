@@ -76,7 +76,7 @@ def open_instagram_with_url(device_id, app_id, url):
     cmd = (
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + f" shell am start -a android.intent.action.VIEW -d {url} {app_id}"
+        + f" shell am start -a android.intent.action.VIEW -d {url} {app_id[0]}"
     )
     cmd_res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
     err = cmd_res.stderr.strip()
@@ -92,7 +92,7 @@ def open_instagram(device_id, app_id):
     cmd = (
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + f" shell am start -n {app_id}/com.instagram.mainactivity.MainActivity"
+        + f" shell am start -n {app_id[0]}/com.instagram.mainactivity.MainActivity"
     )
     cmd_res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
     err = cmd_res.stderr.strip()
@@ -106,7 +106,7 @@ def close_instagram(device_id, app_id):
     os.popen(
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + f" shell am force-stop {app_id}"
+        + f" shell am force-stop {app_id[0]}"
     ).close()
 
 
