@@ -112,7 +112,7 @@ class InteractBloggerFollowers(Plugin):
                 device_id=self.device_id,
                 sessions=self.sessions,
                 session_state=self.session_state,
-                args=args,
+                dargs=args,
             )
             def job():
                 self.handle_blogger(

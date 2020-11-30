@@ -21,14 +21,14 @@ from GramAddict.core.views import LanguageNotEnglishException, TabBarView
 logger = logging.getLogger(__name__)
 
 
-def run_safely(device, device_id, sessions, session_state, args):
+def run_safely(device, device_id, sessions, session_state, dargs):
     def actual_decorator(func):
         def wrapper(*args, **kwargs):
             session_state = sessions[-1]
             try:
                 func(*args, **kwargs)
             except KeyboardInterrupt:
-                close_instagram(device_id, args.app_id)
+                close_instagram(device_id, dargs.app_id)
                 logger.info(
                     f"-------- FINISH: {datetime.now().time()} --------",
                     extra={"color": f"{Style.BRIGHT}{Fore.YELLOW}"},
@@ -47,9 +47,9 @@ def run_safely(device, device_id, sessions, session_state, args):
                 save_crash(device)
                 logger.info("No idea what it was. Let's try again.")
                 # Hack for the case when IGTV was accidentally opened
-                close_instagram(device_id, args.app_id)
+                close_instagram(device_id, dargs.app_id)
                 random_sleep()
-                open_instagram(device_id, args.app_id)
+                open_instagram(device_id, dargs.app_id)
                 TabBarView(device).navigateToProfile()
             except LanguageNotEnglishException:
                 logger.info(
@@ -59,7 +59,7 @@ def run_safely(device, device_id, sessions, session_state, args):
             except Exception as e:
                 logger.error(traceback.format_exc())
                 save_crash(device)
-                close_instagram(device_id, args.app_id)
+                close_instagram(device_id, dargs.app_id)
                 print_full_report(sessions)
                 sessions.persist(directory=session_state.my_username)
                 raise e
