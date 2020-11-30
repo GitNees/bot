@@ -66,10 +66,11 @@ class InteractHashtagLikers(Plugin):
             is_job_completed = False
 
         self.device_id = device_id
+        self.device = device
         self.sessions = sessions
         self.session_state = sessions[-1]
         self.args = args
-        profile_filter = Filter()
+        profile_filter = Filter(args)
 
         # IMPORTANT: in each job we assume being on the top of the Profile tab already
         sources = [

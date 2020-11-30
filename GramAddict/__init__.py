@@ -150,8 +150,10 @@ def run():
     device_id = args.device
     if not check_adb_connection(is_device_id_provided=(device_id is not None)):
         return
-    logger.info("Instagram version: " + get_instagram_version(device_id))
-    device = create_device(device_id)
+    logger.info(
+        "Instagram version: " + get_instagram_version(device_id, args.app_id[0])
+    )
+    device = create_device(device_id, args.app_id[0])
 
     if device is None:
         return
@@ -168,11 +170,11 @@ def run():
             extra={"color": f"{Style.BRIGHT}{Fore.YELLOW}"},
         )
 
-        if not DeviceFacade(device_id).get_info()["screenOn"]:
-            DeviceFacade(device_id).press_power()
-        if DeviceFacade(device_id).is_screen_locked():
-            DeviceFacade(device_id).unlock()
-            if DeviceFacade(device_id).is_screen_locked():
+        if not device.get_info()["screenOn"]:
+            device.press_power()
+        if device.is_screen_locked():
+            device.unlock()
+            if device.is_screen_locked():
                 logger.error(
                     "Can't unlock your screen. There may be a passcode on it. If you would like your screen to be turned on and unlocked automatically, please remove the passcode."
                 )
@@ -248,7 +250,7 @@ def run():
         session_state.finishTime = datetime.now()
 
         if args.screen_sleep:
-            DeviceFacade(device_id).screen_off()
+            device.screen_off()
             logger.info("Screen turned off for sleeping time")
 
         logger.info(

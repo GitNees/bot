@@ -55,7 +55,7 @@ class TabBarView:
 
     def _getTabBar(self):
         tab_bar = self.device.find(
-            resourceIdMatches=case_insensitive_re("com.instagram.android:id/tab_bar"),
+            resourceIdMatches=case_insensitive_re(f"{self.device.app_id}:id/tab_bar"),
             className="android.widget.LinearLayout",
         )
         return tab_bar
@@ -139,7 +139,7 @@ class ActionBarView:
     def _getActionBar(self):
         tab_bar = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/action_bar_container"
+                f"{self.device.app_id}:id/action_bar_container"
             ),
             className="android.widget.FrameLayout",
         )
@@ -173,7 +173,7 @@ class HashTagView:
     def _getFistImageView(self, recycler):
         return recycler.child(
             className="android.widget.ImageView",
-            resourceIdMatches="com.instagram.android:id/image_button",
+            resourceIdMatches=f"{self.device.app_id}:id/image_button",
         )
 
     def _getRecentTab(self):
@@ -190,7 +190,7 @@ class SearchView:
     def _getSearchEditText(self):
         return self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/action_bar_search_edit_text"
+                f"{self.device.app_id}:id/action_bar_search_edit_text"
             ),
             className="android.widget.EditText",
         )
@@ -198,7 +198,7 @@ class SearchView:
     def _getUsernameRow(self, username):
         return self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/row_search_user_username"
+                f"{self.device.app_id}:id/row_search_user_username"
             ),
             className="android.widget.TextView",
             text=username,
@@ -207,7 +207,7 @@ class SearchView:
     def _getHashtagRow(self, hashtag):
         return self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/row_hashtag_textview_tag_name"
+                f"{self.device.app_id}:id/row_hashtag_textview_tag_name"
             ),
             className="android.widget.TextView",
             text=f"#{hashtag}",
@@ -216,14 +216,14 @@ class SearchView:
     def _getTabTextView(self, tab: SearchTabs):
         tab_layout = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/fixed_tabbar_tabs_container"
+                f"{self.device.app_id}:id/fixed_tabbar_tabs_container"
             ),
             className="android.widget.LinearLayout",
         )
 
         tab_text_view = tab_layout.child(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/tab_button_name_text"
+                f"{self.device.app_id}:id/tab_button_name_text"
             ),
             className="android.widget.TextView",
             textMatches=case_insensitive_re(tab.name),
@@ -233,7 +233,7 @@ class SearchView:
     def _searchTabWithTextPlaceholder(self, tab: SearchTabs):
         tab_layout = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/fixed_tabbar_tabs_container"
+                f"{self.device.app_id}:id/fixed_tabbar_tabs_container"
             ),
             className="android.widget.LinearLayout",
         )
@@ -247,7 +247,7 @@ class SearchView:
         )
 
         for item in tab_layout.child(
-            resourceId="com.instagram.android:id/tab_button_fallback_icon",
+            resourceId=f"{self.device.app_id}:id/tab_button_fallback_icon",
             className="android.widget.ImageView",
         ):
             item.click()
@@ -330,7 +330,7 @@ class PostsViewList:
 
     def swipe_to_fit_posts(self, first_post):
         """calculate the right swipe amount necessary to swipe to next post in hashtag post view"""
-        POST_CONTAINER = "com.instagram.android:id/zoomable_view_container|com.instagram.android:id/carousel_media_group"
+        POST_CONTAINER = f"{self.device.app_id}:id/zoomable_view_container|com.instagram.android:id/carousel_media_group"
         displayWidth = self.device.get_info()["displayWidth"]
         if first_post:
             zoomable_view_container = self.device.find(
@@ -347,7 +347,7 @@ class PostsViewList:
         else:
 
             gap_view = self.device.find(
-                resourceIdMatches="com.instagram.android:id/gap_view"
+                resourceIdMatches=f"{self.device.app_id}:id/gap_view"
             ).get_bounds()["top"]
 
             self.device.swipe_points(displayWidth / 2, gap_view, displayWidth / 2, 10)
@@ -370,7 +370,7 @@ class PostsViewList:
     def check_if_last_post(self, last_description):
         """check if that post has been just interacted"""
         post_description = self.device.find(
-            resourceId="com.instagram.android:id/row_feed_comment_textview_layout"
+            resourceId=f"{self.device.app_id}:id/row_feed_comment_textview_layout"
         )
         if post_description.exists(True):
             new_description = post_description.get_text().upper()
@@ -388,13 +388,13 @@ class LanguageView:
     def setLanguage(self, language: str):
         logger.debug(f"Set language to {language}")
         search_edit_text = self.device.find(
-            resourceId="com.instagram.android:id/search",
+            resourceId=f"{self.device.app_id}:id/search",
             className="android.widget.EditText",
         )
         search_edit_text.set_text(language)
 
         list_view = self.device.find(
-            resourceId="com.instagram.android:id/language_locale_list",
+            resourceId=f"{self.device.app_id}:id/language_locale_list",
             className="android.widget.ListView",
         )
         first_item = list_view.child(index=0)
@@ -409,7 +409,7 @@ class AccountView:
         logger.debug("Navigate to Language")
         button = self.device.find(
             textMatches=case_insensitive_re("Language"),
-            resourceId="com.instagram.android:id/row_simple_text_textview",
+            resourceId=f"{self.device.app_id}:id/row_simple_text_textview",
             className="android.widget.TextView",
         )
         button.click()
@@ -425,7 +425,7 @@ class SettingsView:
         logger.debug("Navigate to Account")
         button = self.device.find(
             textMatches=case_insensitive_re("Account"),
-            resourceId="com.instagram.android:id/row_simple_text_textview",
+            resourceId=f"{self.device.app_id}:id/row_simple_text_textview",
             className="android.widget.TextView",
         )
         button.click()
@@ -440,7 +440,7 @@ class OptionsView:
         logger.debug("Navigate to Settings")
         button = self.device.find(
             textMatches=case_insensitive_re("Settings"),
-            resourceId="com.instagram.android:id/menu_settings_row",
+            resourceId=f"{self.device.app_id}:id/menu_settings_row",
             className="android.widget.TextView",
         )
         button.click()
@@ -448,8 +448,6 @@ class OptionsView:
 
 
 class OpenedPostView:
-    BTN_LIKE_RES_ID = "com.instagram.android:id/row_feed_button_like"
-
     def __init__(self, device: DeviceFacade):
         self.device = device
 
@@ -463,8 +461,8 @@ class OpenedPostView:
         """
         MEDIA_GROUP_RE = case_insensitive_re(
             [
-                "com.instagram.android:id/media_group",
-                "com.instagram.android:id/carousel_media_group",
+                f"{self.device.app_id}:id/media_group",
+                f"{self.device.app_id}:id/carousel_media_group",
             ]
         )
         post_view_area = self.device.find(
@@ -484,7 +482,9 @@ class OpenedPostView:
             return None
 
         like_btn_view = post_media_view.down(
-            resourceIdMatches=case_insensitive_re(OpenedPostView.BTN_LIKE_RES_ID)
+            resourceIdMatches=case_insensitive_re(
+                f"{self.device.app_id}:id/row_feed_button_like"
+            )
         )
 
         if like_btn_view.exists():
@@ -518,7 +518,7 @@ class OpenedPostView:
                 self.device.swipe(DeviceFacade.Direction.TOP, scale=0.1)
                 like_btn_view = post_media_view.down(
                     resourceIdMatches=case_insensitive_re(
-                        OpenedPostView.BTN_LIKE_RES_ID
+                        f"{device.app_id}:id/row_feed_button_like"
                     )
                 )
 
@@ -539,8 +539,8 @@ class OpenedPostView:
     def likePost(self, click_btn_like=False):
         MEDIA_GROUP_RE = case_insensitive_re(
             [
-                "com.instagram.android:id/media_group",
-                "com.instagram.android:id/carousel_media_group",
+                f"{self.device.app_id}:id/media_group",
+                f"{self.device.app_id}:id/carousel_media_group",
             ]
         )
         post_media_view = self.device.find(
@@ -567,7 +567,7 @@ class OpenedPostView:
     def open_likers(self):
         while True:
             likes_view = self.device.find(
-                resourceId="com.instagram.android:id/row_feed_textview_likes",
+                resourceId=f"{self.device.app_id}:id/row_feed_textview_likes",
                 className="android.widget.TextView",
             )
             if likes_view.exists(True):
@@ -589,13 +589,13 @@ class OpenedPostView:
 
     def _getUserCountainer(self):
         return self.device.find(
-            resourceId="com.instagram.android:id/row_user_container_base",
+            resourceId=f"{self.device.app_id}:id/row_user_container_base",
             className="android.widget.LinearLayout",
         )
 
     def _getUserName(self, countainer):
         return countainer.child(
-            resourceId="com.instagram.android:id/row_user_primary_name",
+            resourceId=f"{self.device.app_id}:id/row_user_primary_name",
             className="android.widget.TextView",
         )
 
@@ -607,7 +607,7 @@ class PostsGridView:
     def scrollDown(self):
         coordinator_layout = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/coordinator_root_layout"
+                f"{self.device.app_id}:id/coordinator_root_layout"
             )
         )
         if coordinator_layout.exists():
@@ -650,10 +650,10 @@ class ProfileView(ActionBarView):
     def _getActionBarTitleBtn(self):
         re_case_insensitive = case_insensitive_re(
             [
-                "com.instagram.android:id/title_view",
-                "com.instagram.android:id/action_bar_title",
-                "com.instagram.android:id/action_bar_large_title",
-                "com.instagram.android:id/action_bar_textview_title",
+                f"{self.device.app_id}:id/title_view",
+                f"{self.device.app_id}:id/action_bar_title",
+                f"{self.device.app_id}:id/action_bar_large_title",
+                f"{self.device.app_id}:id/action_bar_textview_title",
             ]
         )
         return self.action_bar.child(
@@ -688,7 +688,7 @@ class ProfileView(ActionBarView):
     def _getFollowersTextView(self):
         followers_text_view = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/row_profile_header_textview_followers_count"
+                f"{self.device.app_id}:id/row_profile_header_textview_followers_count"
             ),
             className="android.widget.TextView",
         )
@@ -711,7 +711,7 @@ class ProfileView(ActionBarView):
     def _getFollowingTextView(self):
         following_text_view = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/row_profile_header_textview_following_count"
+                f"{self.device.app_id}:id/row_profile_header_textview_following_count"
             ),
             className="android.widget.TextView",
         )
@@ -734,7 +734,7 @@ class ProfileView(ActionBarView):
     def getPostsCount(self):
         post_count_view = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/row_profile_header_textview_post_count"
+                f"{self.device.app_id}:id/row_profile_header_textview_post_count"
             ),
             className="android.widget.TextView",
         )
@@ -783,7 +783,7 @@ class ProfileView(ActionBarView):
     def getProfileBiography(self):
         biography = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/profile_header_bio_text"
+                f"{self.device.app_id}:id/profile_header_bio_text"
             ),
             className="android.widget.TextView",
         )
@@ -802,7 +802,7 @@ class ProfileView(ActionBarView):
     def getFullName(self):
         full_name_view = self.device.find(
             resourceIdMatches=case_insensitive_re(
-                "com.instagram.android:id/profile_header_full_name"
+                f"{self.device.app_id}:id/profile_header_full_name"
             ),
             className="android.widget.TextView",
         )
@@ -816,8 +816,8 @@ class ProfileView(ActionBarView):
         private_profile_view = self.device.find(
             resourceIdMatches=case_insensitive_re(
                 [
-                    "com.instagram.android:id/private_profile_empty_state",
-                    "com.instagram.android:id/row_profile_header_empty_profile_notice_title",
+                    f"{self.device.app_id}:id/private_profile_empty_state",
+                    f"{self.device.app_id}:id/row_profile_header_empty_profile_notice_title",
                 ]
             )
         )
@@ -825,13 +825,13 @@ class ProfileView(ActionBarView):
 
     def isStoryAvailable(self):
         return self.device.find(
-            resourceId="com.instagram.android:id/reel_ring",
+            resourceId=f"{self.device.app_id}:id/reel_ring",
             className="android.view.View",
         ).exists()
 
     def profileImage(self):
         return self.device.find(
-            resourceId="com.instagram.android:id/row_profile_header_imageview",
+            resourceId=f"{self.device.app_id}:id/row_profile_header_imageview",
             className="android.widget.ImageView",
         )
 
@@ -839,8 +839,8 @@ class ProfileView(ActionBarView):
         logger.debug("Navigate to Followers")
         FOLLOWERS_BUTTON_ID_REGEX = case_insensitive_re(
             [
-                "com.instagram.android:id/row_profile_header_followers_container",
-                "com.instagram.android:id/row_profile_header_container_followers",
+                f"{self.device.app_id}:id/row_profile_header_followers_container",
+                f"{self.device.app_id}:id/row_profile_header_container_followers",
             ]
         )
         followers_button = self.device.find(resourceIdMatches=FOLLOWERS_BUTTON_ID_REGEX)
@@ -850,10 +850,10 @@ class ProfileView(ActionBarView):
         """calculate the right swipe amount necessary to see 12 photos"""
         displayWidth = self.device.get_info()["displayWidth"]
         element_to_swipe_over = self.device.find(
-            resourceIdMatches="com.instagram.android:id/profile_tabs_container"
+            resourceIdMatches=f"{self.device.app_id}:id/profile_tabs_container"
         ).get_bounds()["top"]
         bar_countainer = self.device.find(
-            resourceIdMatches="com.instagram.android:id/action_bar_container"
+            resourceIdMatches=f"{self.device.app_id}:id/action_bar_container"
         ).get_bounds()["bottom"]
 
         logger.info("Scrolled down to see more posts.")
@@ -883,14 +883,14 @@ class ProfileView(ActionBarView):
         raise Exception("Not implemented")
 
     def _navigateToTab(self, tab: ProfileTabs):
-        TABS_RES_ID = "com.instagram.android:id/profile_tab_layout"
+        TABS_RES_ID = f"{self.device.app_id}:id/profile_tab_layout"
         TABS_CLASS_NAME = "android.widget.HorizontalScrollView"
         tabs_view = self.device.find(
             resourceIdMatches=case_insensitive_re(TABS_RES_ID),
             className=TABS_CLASS_NAME,
         )
 
-        TAB_RES_ID = "com.instagram.android:id/profile_tab_icon_view"
+        TAB_RES_ID = f"{self.device.app_id}:id/profile_tab_icon_view"
         TAB_CLASS_NAME = "android.widget.ImageView"
         description = ""
         if tab == ProfileTabs.POSTS:
@@ -933,20 +933,20 @@ class CurrentStoryView:
 
     def getStoryFrame(self):
         return self.device.find(
-            resourceId="com.instagram.android:id/reel_viewer_image_view",
+            resourceId=f"{self.device.app_id}:id/reel_viewer_image_view",
             className="android.widget.FrameLayout",
         )
 
     def getUsername(self):
         reel_viewer_title = self.device.find(
-            resourceId="com.instagram.android:id/reel_viewer_title",
+            resourceId=f"{self.device.app_id}:id/reel_viewer_title",
             className="android.widget.TextView",
         )
         return "" if not reel_viewer_title.exists() else reel_viewer_title.get_text()
 
     def getTimestamp(self):
         reel_viewer_timestamp = self.device.find(
-            resourceId="com.instagram.android:id/reel_viewer_timestamp",
+            resourceId=f"{self.device.app_id}:id/reel_viewer_timestamp",
             className="android.widget.TextView",
         )
         if reel_viewer_timestamp.exists():

@@ -73,7 +73,7 @@ class ForceIteract(Plugin):
         self.state = None
         self.sessions = sessions
         self.session_state = sessions[-1]
-        profile_filter = Filter()
+        profile_filter = Filter(args)
 
         # IMPORTANT: in each job we assume being on the top of the Profile tab already
         sources = [source for source in args.force_interact]
@@ -206,7 +206,7 @@ class ForceIteract(Plugin):
         unfollow_button.click()
 
         confirm_unfollow_button = device.find(
-            resourceId="com.instagram.android:id/follow_sheet_unfollow_row",
+            resourceId=f"{self.device.app_id}:id/follow_sheet_unfollow_row",
             className="android.widget.TextView",
         )
         if not confirm_unfollow_button.exists():

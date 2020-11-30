@@ -31,7 +31,8 @@ IGNORE_CHARSETS = ["MATHEMATICAL"]
 class Filter:
     conditions = None
 
-    def __init__(self):
+    def __init__(self, args):
+        self.args = args
         if os.path.exists(FILENAME_CONDITIONS):
             with open(FILENAME_CONDITIONS) as json_file:
                 self.conditions = json.load(json_file)
@@ -270,10 +271,9 @@ class Filter:
 
         return followers, followings
 
-    @staticmethod
-    def _has_business_category(device):
+    def _has_business_category(self, device):
         business_category_view = device.find(
-            resourceId="com.instagram.android:id/profile_header_business_category",
+            resourceId=f"{self.args.app_id[0]}:id/profile_header_business_category",
             className="android.widget.TextView",
         )
         return business_category_view.exists()

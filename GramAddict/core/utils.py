@@ -55,11 +55,11 @@ def check_adb_connection(is_device_id_provided):
     return is_ok
 
 
-def get_instagram_version(device_id):
+def get_instagram_version(device_id, app_id):
     stream = os.popen(
         "adb"
         + ("" if device_id is None else " -s " + device_id)
-        + " shell dumpsys package com.instagram.android"
+        + f" shell dumpsys package {app_id}"
     )
     output = stream.read()
     version_match = re.findall("versionName=(\\S+)", output)
@@ -162,10 +162,10 @@ def save_crash(device):
     logger.info("https://discord.gg/9MTjgs8g5R\n", extra={"color": Fore.GREEN})
 
 
-def detect_block(device):
+def detect_block(device, app_id):
     logger.debug("Checking for block...")
     block_dialog = device.find(
-        resourceId="com.instagram.android:id/dialog_root_view",
+        resourceId=f"{app_id}:id/dialog_root_view",
         className="android.widget.FrameLayout",
     )
     is_blocked = block_dialog.exists()

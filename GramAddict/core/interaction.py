@@ -114,7 +114,7 @@ def interact_with_user(
 
             if like_succeed:
                 logger.debug("Like succeed. Check for block.")
-                detect_block(device)
+                detect_block(device, args.app_id)
                 on_like()
             else:
                 logger.warning("Fail to like post. Let's continue...")
@@ -154,7 +154,7 @@ def do_like(opened_post_view, device, on_like):
 
     if like_succeed:
         logger.info("Like succeeded!")
-        detect_block(device)
+        detect_block(device, args.app_id)
         on_like()
     else:
         logger.warning("Fail to like post. Let's continue...")
@@ -222,7 +222,7 @@ def _follow(device, username, follow_percentage, args, session_state):
 
         logger.info("Following...")
         coordinator_layout = device.find(
-            resourceId="com.instagram.android:id/coordinator_root_layout"
+            resourceId=f"{args.app_id}:id/coordinator_root_layout"
         )
         if coordinator_layout.exists():
             coordinator_layout.scroll(DeviceFacade.Direction.TOP)
@@ -266,7 +266,7 @@ def _follow(device, username, follow_percentage, args, session_state):
                 raise LanguageNotEnglishException()
 
         follow_button.click()
-        detect_block(device)
+        detect_block(device, args.app_id)
         logger.info(f"Followed @{username}", extra={"color": f"{Fore.GREEN}"})
         random_sleep()
         return True

@@ -15,10 +15,10 @@ UI_TIMEOUT_LONG = 5
 UI_TIMEOUT_SHORT = 1
 
 
-def create_device(device_id):
+def create_device(device_id, app_id):
     logger.debug("Using uiautomator v2")
     try:
-        return DeviceFacade(device_id)
+        return DeviceFacade(device_id, app_id)
     except ImportError as e:
         logger.error(str(e))
         return None
@@ -27,8 +27,9 @@ def create_device(device_id):
 class DeviceFacade:
     deviceV2 = None  # uiautomator2
 
-    def __init__(self, device_id):
+    def __init__(self, device_id, app_id):
         self.device_id = device_id
+        self.app_id = app_id
 
         try:
             self.deviceV2 = (
