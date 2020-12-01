@@ -40,7 +40,7 @@ class InteractPostLikers(Plugin):
         )
         self.arguments = [
             {
-                "arg": "--interact-post-likers",
+                "arg": "--post-likers",
                 "nargs": "+",
                 "help": "list of users that you want to interact with posts' likers",
                 "metavar": ("user1", "user2"),
@@ -149,6 +149,7 @@ class InteractPostLikers(Plugin):
         stories_percentage,
         follow_percentage,
         follow_limit,
+        post_likers,
         storage,
         profile_filter,
         on_like,
@@ -179,7 +180,8 @@ class InteractPostLikers(Plugin):
         random_sleep()
         if not search_view.navigateToUsername(username):
             return
-
+            
+        random_sleep()
         logger.info("Opening the first result")
         ProfileView(device).swipe_to_fit_posts()
         random_sleep()
