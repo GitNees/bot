@@ -41,6 +41,10 @@ class ProfileTabs(Enum):
     EFFECTS = auto()
     PHOTOS_OF_YOU = auto()
 
+class Swipe_to(Enum):
+    HALF_PHOTO = auto()
+    NEXT_POST = auto()
+
 
 class TabBarView:
     HOME_CONTENT_DESC = "Home"
@@ -328,11 +332,15 @@ class PostsViewList:
     def __init__(self, device: DeviceFacade):
         self.device = device
 
-    def swipe_to_fit_posts(self, first_post):
-        """calculate the right swipe amount necessary to swipe to next post in hashtag post view"""
+    def swipe_to_fit_posts(self, swipe: Swipe_to):
+        """calculate the right swipe amount necessary to swipe to next post in hashtag post view
+        in order to make it available to other plug-ins I cutted it in two moves"""
         POST_CONTAINER = "com.instagram.android:id/zoomable_view_container|com.instagram.android:id/carousel_media_group"
+        GAP_OR_FOOTER = "com.instagram.android:id/gap_view|com.instagram.android:id/footer_space"
         displayWidth = self.device.get_info()["displayWidth"]
-        if first_post:
+
+        # move type: half photo
+        if swipe == swipe.HALF_PHOTO:
             zoomable_view_container = self.device.find(
                 resourceIdMatches=POST_CONTAINER
             ).get_bounds()["bottom"]
@@ -344,27 +352,15 @@ class PostsViewList:
                 displayWidth / 2,
                 zoomable_view_container * 2 / 3,
             )
-        else:
-
+        # move type: gab/footer to next post
+        elif swipe == swipe.NEXT_POST:
             gap_view = self.device.find(
-                resourceIdMatches="com.instagram.android:id/gap_view"
+                resourceIdMatches=GAP_OR_FOOTER
             ).get_bounds()["top"]
-
-            self.device.swipe_points(displayWidth / 2, gap_view, displayWidth / 2, 10)
-            zoomable_view_container = self.device.find(
-                resourceIdMatches=(POST_CONTAINER)
-            )
-
             zoomable_view_container = self.device.find(
                 resourceIdMatches=POST_CONTAINER
-            ).get_bounds()["bottom"]
-
-            self.device.swipe_points(
-                displayWidth / 2,
-                zoomable_view_container - 1,
-                displayWidth / 2,
-                zoomable_view_container * 2 / 3,
-            )
+            ).get_bounds()["top"]
+            self.device.swipe_points(displayWidth / 2, gap_view, displayWidth / 2, zoomable_view_container)
         return
 
     def check_if_last_post(self, last_description):
@@ -379,6 +375,30 @@ class PostsViewList:
                 return True, new_description
             else:
                 return False, new_description
+
+    def _open_post_owner(self):
+        NAME_CONTAINER = "com.instagram.android:id/row_feed_photo_profile_name"
+        logger.info("Open post owner")
+        self.device.find(resourceIdMatches=(NAME_CONTAINER)).click()
+    
+    def _get_post_owner_name(self):
+        NAME_CONTAINER = "com.instagram.android:id/row_feed_photo_profile_name"
+        return self.device.find(resourceIdMatches=(NAME_CONTAINER)).get_text()
+
+    def _like_in_post_view(self):
+        POST_CONTAINER = "com.instagram.android:id/zoomable_view_container|com.instagram.android:id/carousel_media_group"
+        logger.info("Like post in place")
+        self.device.find(resourceIdMatches=(POST_CONTAINER)).double_click()
+
+    def _follow_in_post_view(self):
+        FOLLOW_BUTTON = "com.instagram.android:id/button"
+        logger.info("Follow blogger in place")
+        self.device.find(resourceIdMatches=(FOLLOW_BUTTON)).click()
+
+    def _comment_in_post_view(self):
+        COMMENT_BUTTON = "com.instagram.android:id/row_feed_button_comment"
+        logger.info("Open comments of post")
+        self.device.find(resourceIdMatches=(COMMENT_BUTTON)).click()
 
 
 class LanguageView:

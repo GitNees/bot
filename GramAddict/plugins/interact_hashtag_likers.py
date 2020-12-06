@@ -132,7 +132,6 @@ class InteractHashtagLikers(Plugin):
                     int(args.follow_percentage),
                     int(args.follow_limit) if args.follow_limit else None,
                     args.hashtag_likers_recent,
-                    # args.recent_tab,
                     storage,
                     profile_filter,
                     on_like,
@@ -161,7 +160,6 @@ class InteractHashtagLikers(Plugin):
         follow_percentage,
         follow_limit,
         hashtag_likers_recent,
-        # recent_tab,
         storage,
         profile_filter,
         on_like,
@@ -197,7 +195,6 @@ class InteractHashtagLikers(Plugin):
             logger.info("Switching to Recent tab")
             HashTagView(device)._getRecentTab().click()
             random_sleep()
-            random_sleep()  # wonder if it possible to check if everything is loaded instead of doing multiple random_sleep..
 
         logger.info("Opening the first result")
 
